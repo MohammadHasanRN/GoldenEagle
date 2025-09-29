@@ -9,6 +9,7 @@ import {
 
 import { Box, useTheme } from '@Theme';
 import { AnimatedBox, ScreenWidth } from '@Core';
+
 import { RegularContent } from './front-face';
 import { FlippedContent } from './back-face';
 
@@ -29,7 +30,7 @@ export const FlipCard = ({
     isMatched,
     onPress,
     direction = 'y',
-    duration = 500,
+    duration = 300,
     card,
 }: Props) => {
     const theme = useTheme();
