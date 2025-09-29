@@ -7,8 +7,9 @@ import { Box, useTheme } from "@Theme";
 import { Cards, CardType } from "@Core";
 
 export const MainScreen = () => {
-    const { top } = useSafeAreaInsets();
     const theme = useTheme();
+    const { top } = useSafeAreaInsets();
+
     const [cards, setCards] = useState<CardType[]>([]);
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
     const [moves, setMoves] = useState(0);
@@ -16,12 +17,14 @@ export const MainScreen = () => {
 
     const generateCards = () => {
         const indices: number[] = [];
+        
         while (indices.length < 10) {
             const idx = Math.floor(Math.random() * Cards.length);
             if (!indices.includes(idx)) {
                 indices.push(idx);
             }
         }
+
         const selectedCards = indices.map(i => Cards[i]);
         const cardPairs = [...selectedCards, ...selectedCards];
 
@@ -104,7 +107,41 @@ export const MainScreen = () => {
     }, []);
 
     return (
-        <Box flex={1} backgroundColor="LightGray" style={{paddingTop: top || theme.spacing.m}}>
+        <Box flex={1} backgroundColor="LightGray">
+            <Box  
+                flexDirection="row" 
+                justifyContent="space-between" 
+                alignItems="center" 
+                paddingHorizontal="lg" 
+                paddingVertical="m"
+                backgroundColor="Light"
+                shadowColor="Dark"
+                shadowOffset={{ width: 0, height: 2 }}
+                shadowOpacity={0.1}
+                shadowRadius={4}
+                elevation={3}
+                style={{paddingTop: top || theme.spacing.m}}
+            >
+                <Box>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+                        Moves: {moves}
+                    </Text>
+                    <Text style={{ fontSize: 14, color: '#666' }}>
+                        Matches: {matches} / 10
+                    </Text>
+                </Box>
+                <TouchableOpacity
+                    onPress={generateCards}
+                    style={{
+                        backgroundColor: '#007AFF',
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        borderRadius: 8,
+                    }}
+                >
+                    <Text style={{ color: 'white', fontWeight: 'bold' }}>New Game</Text>
+                </TouchableOpacity>
+            </Box>
 
             <Box flex={1} flexDirection="row" flexWrap="wrap" justifyContent="center" paddingTop="sm" gap="s">
                 {cards.map((card) => (
