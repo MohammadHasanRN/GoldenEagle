@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 
 import { Box, useTheme } from '@Theme';
 import { Text } from '@Components';
 import { AnimatedBox } from '@Core';
-import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 
 interface Props {
     topColor: string;

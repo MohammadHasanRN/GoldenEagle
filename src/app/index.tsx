@@ -9,7 +9,7 @@ export const Application: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      //setLaunching(false);
+      setLaunching(false);
     }, 3500);
   }, []);
 
