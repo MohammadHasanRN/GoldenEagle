@@ -3,7 +3,7 @@ import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { FlipCard, Text } from "@Components";
+import { FlipCard, Text, WinningModal } from "@Components";
 import { Box, useTheme } from "@Theme";
 import { Cards, CardType, MainStackNavigationProps } from "@Core";
 
@@ -17,6 +17,8 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
     const [moves, setMoves] = useState(0);
     const [matches, setMatches] = useState(0);
+
+    const [winningModalVisible, setWinningModalVisible] = useState(false);
 
     const generateCards = (currentLevel: number) => {
         const indices: number[] = [];
@@ -123,7 +125,7 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
             setLevel(level + 1);
             saveProgress(level + 1);
         } else if (matches === level * 2 && level === 5) {
-            // Show winning screen
+            setWinningModalVisible(true);
         }
     }, [matches]);
 
@@ -133,6 +135,12 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
 
     return (
         <Box flex={1} backgroundColor="LightGray" style={{paddingBottom: bottom || theme.spacing.m}}>
+
+            <WinningModal visible={winningModalVisible} onDismiss={() => {
+                setWinningModalVisible(false);
+                handleNewGame();
+            }} />
+
             <Box  
                 flexDirection="row" 
                 justifyContent="space-between" 

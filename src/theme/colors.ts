@@ -9,7 +9,7 @@ export const lightColors = {
   Success: '#000',
   Golden: '#FFB906',
   Error: '#E74C3C',
-  Natural: '#EDFFF4',
+  Natural: '#99bbf2',
   Warning: '#02BA2A',
   
   Text: '#185745',
