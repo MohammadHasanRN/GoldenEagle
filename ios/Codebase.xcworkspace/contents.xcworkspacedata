@@ -7,4 +7,19 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:roundstart.wav">
+   </FileRef>
+   <FileRef
+      location = "group:smallwin.wav">
+   </FileRef>
+   <FileRef
+      location = "group:success.wav">
+   </FileRef>
+   <FileRef
+      location = "group:transition.wav">
+   </FileRef>
+   <FileRef
+      location = "group:typing.wav">
+   </FileRef>
 </Workspace>
