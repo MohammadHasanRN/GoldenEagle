@@ -11,7 +11,8 @@ export const MenuScreen: React.FC<MainStackNavigationProps<'Menu'>> = ({navigati
   const theme = useTheme();
   const {top} = useSafeAreaInsets();
 
-  const handleNewGame = () => {
+  const handleNewGame = async () => {
+    await AsyncStorage.setItem('CardsMemoryLevel', '1');
     navigation.replace('Main', {level: 1});
   };
 

@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { FlipCard, Text } from "@Components";
 import { Box, useTheme } from "@Theme";
-import { Cards, CardType } from "@Core";
+import { Cards, CardType, MainStackNavigationProps } from "@Core";
 
-export const MainScreen = () => {
+export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) => {
     const theme = useTheme();
-    const { top } = useSafeAreaInsets();
+    const { top, bottom } = useSafeAreaInsets();
+
+    const [level, setLevel] = useState(route.params.level);
 
     const [cards, setCards] = useState<CardType[]>([]);
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
     const [moves, setMoves] = useState(0);
     const [matches, setMatches] = useState(0);
 
-    const generateCards = () => {
+    const generateCards = (currentLevel: number) => {
         const indices: number[] = [];
         
-        while (indices.length < 10) {
+        while (indices.length < currentLevel * 2) {
             const idx = Math.floor(Math.random() * Cards.length);
             if (!indices.includes(idx)) {
                 indices.push(idx);
@@ -49,7 +52,7 @@ export const MainScreen = () => {
             setCards(prevCards =>
                 prevCards.map(c => ({ ...c, isFlipped: false }))
             );
-        }, 3000);
+        }, currentLevel * 500);
     };
 
     const handleCardPress = (cardId: number) => {
@@ -103,11 +106,33 @@ export const MainScreen = () => {
     };
 
     useEffect(() => {
-        generateCards();
+        generateCards(level);
     }, []);
 
+    const handleNewGame = async () => {
+        setLevel(1);
+        await AsyncStorage.setItem('CardsMemoryLevel', '1');
+        generateCards(1);
+    };
+
+    useEffect(() => {
+        if (matches === level * 2 && level < 5) {
+            setMoves(0);
+            setMatches(0);
+            generateCards(level + 1);
+            setLevel(level + 1);
+            saveProgress(level + 1);
+        } else if (matches === level * 2 && level === 5) {
+            // Show winning screen
+        }
+    }, [matches]);
+
+    const saveProgress = async (levelToSave: number) => {
+        await AsyncStorage.setItem('CardsMemoryLevel', levelToSave.toString());
+    };
+
     return (
-        <Box flex={1} backgroundColor="LightGray">
+        <Box flex={1} backgroundColor="LightGray" style={{paddingBottom: bottom || theme.spacing.m}}>
             <Box  
                 flexDirection="row" 
                 justifyContent="space-between" 
@@ -127,34 +152,39 @@ export const MainScreen = () => {
                         Moves: {moves}
                     </Text>
                     <Text style={{ fontSize: 14, color: '#666' }}>
-                        Matches: {matches} / 10
+                        Matches: {matches} / {level * 2}
                     </Text>
                 </Box>
-                <TouchableOpacity
-                    onPress={generateCards}
-                    style={{
-                        backgroundColor: '#007AFF',
-                        paddingHorizontal: 16,
-                        paddingVertical: 8,
-                        borderRadius: 8,
-                    }}
-                >
-                    <Text style={{ color: 'white', fontWeight: 'bold' }}>New Game</Text>
-                </TouchableOpacity>
             </Box>
 
-            <Box flex={1} flexDirection="row" flexWrap="wrap" justifyContent="center" paddingTop="sm" gap="s">
-                {cards.map((card) => (
-                    <FlipCard
-                        key={`card-${card.id}`}
-                        cardId={card.id}
-                        isFlipped={card.isFlipped}
-                        isMatched={card.isMatched}
-                        onPress={handleCardPress}
-                        card={card.image}
-                    />
-                ))}
+            <Box flex={1} justifyContent="center">
+                <Box flexDirection="row" flexWrap="wrap" justifyContent="center" gap="s">
+                    {cards.map((card) => (
+                        <FlipCard
+                            key={`card-${card.id}`}
+                            cardId={card.id}
+                            isFlipped={card.isFlipped}
+                            isMatched={card.isMatched}
+                            onPress={handleCardPress}
+                            card={card.image}
+                        />
+                    ))}
+                </Box>
             </Box>
+
+            <TouchableOpacity
+                onPress={handleNewGame}
+                style={{
+                    backgroundColor: '#007AFF',
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    marginHorizontal: theme.spacing.sm,
+                    alignItems: 'center',
+                }}
+            >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>New Game</Text>
+            </TouchableOpacity>
       </Box>
     );
 };
