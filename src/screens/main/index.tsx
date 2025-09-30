@@ -2,14 +2,22 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Feather from "react-native-vector-icons/Feather";
 
 import { FlipCard, Text, WinningModal } from "@Components";
 import { Box, useTheme } from "@Theme";
-import { Cards, CardType, MainStackNavigationProps } from "@Core";
+import { Cards, CardType, IsIos, MainStackNavigationProps } from "@Core";
+import { useEffects } from "@Store";
+import { useSoundPlayer } from "@Hooks";
 
 export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) => {
     const theme = useTheme();
     const { top, bottom } = useSafeAreaInsets();
+
+    const soundEnabled = useEffects(state => state.soundsEnabled);
+    const setSoundEnabled = useEffects(state => state.setSoundsEnabled);
+
+    const {playSound} = useSoundPlayer();
 
     const [level, setLevel] = useState(route.params.level);
 
@@ -21,6 +29,8 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
     const [winningModalVisible, setWinningModalVisible] = useState(false);
 
     const generateCards = (currentLevel: number) => {
+        IsIos ? playSound('roundstart.wav') : playSound('roundstart.mp3'); 
+
         const indices: number[] = [];
         
         while (indices.length < currentLevel * 2) {
@@ -58,6 +68,8 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
     };
 
     const handleCardPress = (cardId: number) => {
+        IsIos ? playSound('typing.wav') : playSound('typing.mp3'); 
+
         const card = cards.find(c => c.id === cardId);
         if (!card || card.isFlipped || card.isMatched || flippedCards.length >= 2) {
             return;
@@ -81,6 +93,8 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
 
             // Check if the cards match
             if (firstCard && secondCard && firstCard.image === secondCard.image) {
+                IsIos ? playSound('success.wav') : playSound('success.mp3'); 
+
                 setTimeout(() => {
                     setCards(prevCards => 
                         prevCards.map(c => 
@@ -93,6 +107,8 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
                     setFlippedCards([]);
                 }, 300);
             } else {
+                IsIos ? playSound('transition.wav') : playSound('transition.mp3'); 
+
                 setTimeout(() => {
                     setCards(prevCards => 
                         prevCards.map(c => 
@@ -126,6 +142,7 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
             saveProgress(level + 1);
         } else if (matches === level * 2 && level === 5) {
             setWinningModalVisible(true);
+            IsIos ? playSound('smallwin.wav') : playSound('smallwin.mp3'); 
         }
     }, [matches]);
 
@@ -163,6 +180,9 @@ export const MainScreen: React.FC<MainStackNavigationProps<'Main'>> = ({route}) 
                         Matches: {matches} / {level * 2}
                     </Text>
                 </Box>
+                <TouchableOpacity onPress={() => setSoundEnabled(!soundEnabled)}>
+                    <Feather name={soundEnabled ? "volume-2" : "volume-x"} size={24} color="black" />
+                </TouchableOpacity>
             </Box>
 
             <Box flex={1} justifyContent="center">

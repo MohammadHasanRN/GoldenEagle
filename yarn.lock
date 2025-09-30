@@ -2985,6 +2985,7 @@ __metadata:
     react-native-safe-area-context: "npm:^5.6.1"
     react-native-screens: "npm:^4.16.0"
     react-native-skeleton-placeholder: "npm:^5.2.4"
+    react-native-sound: "npm:^0.12.0"
     react-native-svg: "npm:^15.13.0"
     react-native-vector-icons: "npm:^10.3.0"
     react-native-worklets: "npm:^0.5.1"
@@ -8197,6 +8198,16 @@ __metadata:
     react-native: ">=0.50.1"
     react-native-linear-gradient: ^2.5.6
   checksum: 10c0/9b9e7066d968da98f19bd85eea8d87592a7ef12066cd9d1e4942a4b24af37ba453181012c7e3c2a222f656e0c7b90e6bfbd1ca636df2407cecbb333e56c59f0c
+  languageName: node
+  linkType: hard
+
+"react-native-sound@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "react-native-sound@npm:0.12.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/9102b81314afe6addb42372d7ffb8b806298f3bca8bb6bd53ec0828a115a4a356a91035b4c77ad9d6d88f785aaa7e1c166ff9a6d93d4b86e3adca71ee27abb7e
   languageName: node
   linkType: hard
 

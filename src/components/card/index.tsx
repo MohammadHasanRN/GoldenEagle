@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageSourcePropType, Pressable } from 'react-native';
+import { ImageSourcePropType, TouchableWithoutFeedback } from 'react-native';
 import {
     interpolate,
     useAnimatedStyle,
@@ -72,7 +72,7 @@ export const FlipCard = ({
     });
   
     return (
-      <Pressable onPress={handlePress} disabled={isMatched}>
+      <TouchableWithoutFeedback onPress={handlePress} disabled={isMatched}>
           <Box width={ScreenWidth / 4 - theme.spacing.sm} height={(ScreenWidth / 4 - theme.spacing.sm) * 1.452} opacity={isMatched ? 0.25 : 1}>
           <AnimatedBox position="absolute" zIndex={1} bottom={0} left={0} right={0} top={0}
               style={[
@@ -89,7 +89,7 @@ export const FlipCard = ({
               <FlippedContent card={card} />
           </AnimatedBox>
           </Box>
-      </Pressable>
+      </TouchableWithoutFeedback>
     );
 };
   
